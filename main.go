@@ -4,11 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 
 	"k8s.io/helm/pkg/chartutil"
 	"k8s.io/helm/pkg/engine"
+	"k8s.io/helm/pkg/proto/hapi/chart"
+	"k8s.io/helm/pkg/timeconv"
 )
 
 const globalUsage = `
@@ -41,15 +45,35 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	config := &chart.Config{Raw: "", Values: map[string]*chart.Value{}}
+
+	options := chartutil.ReleaseOptions{
+		Name:      "RELEASE-NAME",
+		Time:      timeconv.Now(),
+		Namespace: "NAMESPACE",
+		//Revision:  1,
+		//IsInstall: true,
+	}
+
 	// Set up engine.
-	e := engine.New()
-	out, err := e.Render(c, map[string]interface{}{})
+	renderer := engine.New()
+
+	vals, err := chartutil.ToRenderValues(c, config, options)
+	if err != nil {
+		return err
+	}
+
+	out, err := renderer.Render(c, vals)
 	if err != nil {
 		return err
 	}
 
 	for name, data := range out {
-		fmt.Printf("---\n# $s\n", name)
+		b := filepath.Base(name)
+		if strings.HasPrefix(b, "_") {
+			continue
+		}
+		fmt.Printf("---\n# %s\n", name)
 		fmt.Println(data)
 	}
 	return nil
