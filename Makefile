@@ -1,4 +1,4 @@
-HELM_HOME ?= $(helm home)
+HELM_HOME ?= $(shell helm home)
 HAS_GLIDE := $(shell command -v glide;)
 
 .PHONY: install
