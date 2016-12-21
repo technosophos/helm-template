@@ -4,7 +4,7 @@ This is a Helm plugin to help chart developers debug their charts. It works like
 `helm install --dry-run --debug`, except that it runs locally, has more output
 options, and is quite a bit faster.
 
-<script type="text/javascript" src="https://asciinema.org/a/8kuehzpx5xyl8cm3cairica8z.js" id="asciicast-8kuehzpx5xyl8cm3cairica8z" async></script>
+<a href="https://asciinema.org/a/8kuehzpx5xyl8cm3cairica8z" target="_blank"><img src="https://asciinema.org/a/8kuehzpx5xyl8cm3cairica8z.png" width="589"/></a>
 
 ## Usage
 
