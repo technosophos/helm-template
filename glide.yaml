@@ -6,3 +6,4 @@ import:
   subpackages:
   - pkg/chartutil
   - pkg/engine
+- package: github.com/ghodss/yaml

@@ -1,5 +1,5 @@
-hash: 95593793b54523741b73203b9b8fc6fa3861d657edeace30a80b31a4f502cd97
-updated: 2016-12-19T16:05:05.731347001-07:00
+hash: f2129e1a5049bb7327da11aa2f55bd88c4943e356b48eda1a58f1e99a5fa1042
+updated: 2016-12-20T16:57:20.651593753-07:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
@@ -34,10 +34,12 @@ imports:
 - name: gopkg.in/yaml.v2
   version: a83829b6f1293c91addabc89d0571c246397bbf4
 - name: k8s.io/helm
-  version: b7b648456ba15d3d190bb84b36a4bc9c41067cf3
+  version: 3ba0b01baaa6407e6f9794076d6266d72f602758
   subpackages:
+  - cmd/helm/strvals
   - pkg/chartutil
   - pkg/engine
   - pkg/ignore
   - pkg/proto/hapi/chart
+  - pkg/timeconv
 testImports: []
