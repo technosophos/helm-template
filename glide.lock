@@ -1,5 +1,5 @@
 hash: f2129e1a5049bb7327da11aa2f55bd88c4943e356b48eda1a58f1e99a5fa1042
-updated: 2016-12-20T16:57:20.651593753-07:00
+updated: 2016-12-20T19:06:15.591224034-07:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
@@ -34,7 +34,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: a83829b6f1293c91addabc89d0571c246397bbf4
 - name: k8s.io/helm
-  version: 3ba0b01baaa6407e6f9794076d6266d72f602758
+  version: 58e545f47002e36ca71ac5d1f7a987b56e1937b3
   subpackages:
   - cmd/helm/strvals
   - pkg/chartutil

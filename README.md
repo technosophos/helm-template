@@ -4,6 +4,8 @@ This is a Helm plugin to help chart developers debug their charts. It works like
 `helm install --dry-run --debug`, except that it runs locally, has more output
 options, and is quite a bit faster.
 
+[![asciicast](https://asciinema.org/a/8kuehzpx5xyl8cm3cairica8z.png)](https://asciinema.org/a/8kuehzpx5xyl8cm3cairica8z)
+
 ## Usage
 
 Render chart templates locally and display the output.
@@ -29,9 +31,13 @@ $ helm template [flags] CHART
 
 ## Install
 
-Clone this repo, and then:
+Clone the repository into your `$GOPATH` and then build it.
 
 ```
+$ mkdir -p $GOPATH/src/github.com/technosophos/
+$ cd $GOPATH/src/github.com/technosophos/
+$ git clone https://github.com/technosophos/helm-template.git
+$ cd helm-template
 $ make install
 ```
 
