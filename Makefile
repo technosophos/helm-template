@@ -11,6 +11,13 @@ install: bootstrap build
 build:
 	go build -o tpl ./main.go
 
+.PHONY: dist
+dist:
+	GOOS=linux GOARCH=amd64 go build -o tpl ./main.go
+	tar -zcvf helm-template-linux.tgz tpl README.md LICENSE.txt plugin.yaml
+	GOOS=darwin GOARCH=amd64 go build -o tpl ./main.go
+	tar -zcvf helm-template-macos.tgz tpl README.md LICENSE.txt plugin.yaml
+
 
 .PHONY: bootstrap
 bootstrap:
