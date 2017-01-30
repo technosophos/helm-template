@@ -1,5 +1,5 @@
 hash: f2129e1a5049bb7327da11aa2f55bd88c4943e356b48eda1a58f1e99a5fa1042
-updated: 2016-12-20T19:06:15.591224034-07:00
+updated: 2017-01-30T11:18:00.241831311-07:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
@@ -24,7 +24,7 @@ imports:
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/Masterminds/sprig
-  version: 1e60e4ce482a1e2c7b9c9be667535ef152e04300
+  version: 69011c0cd9b4d2e0733c4d9e2c8e2a5a0d0a2f2f
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/spf13/cobra
@@ -34,7 +34,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: a83829b6f1293c91addabc89d0571c246397bbf4
 - name: k8s.io/helm
-  version: 58e545f47002e36ca71ac5d1f7a987b56e1937b3
+  version: 5cbc48fb305ca4bf68c26eb8d2a7eb363227e973
   subpackages:
   - cmd/helm/strvals
   - pkg/chartutil
