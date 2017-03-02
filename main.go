@@ -103,7 +103,7 @@ func run(cmd *cobra.Command, args []string) error {
 		if strings.HasPrefix(b, "_") {
 			continue
 		}
-		fmt.Printf("---\n# %s\n", name)
+		fmt.Printf("---\n# Source: %s\n", name)
 		fmt.Println(data)
 	}
 	return nil
