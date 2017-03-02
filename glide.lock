@@ -1,8 +1,10 @@
-hash: f2129e1a5049bb7327da11aa2f55bd88c4943e356b48eda1a58f1e99a5fa1042
-updated: 2017-01-30T11:18:00.241831311-07:00
+hash: fb296386508414b5afa66ba325fcd951dabdb14cde8c207a8f84e08d00c9f550
+updated: 2017-02-25T10:24:21.847168-07:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
+- name: github.com/blang/semver
+  version: 31b736133b98f26d5e078ec9eb591666edfd091f
 - name: github.com/ghodss/yaml
   version: 73d445a93680fa1a78ae23a5839bad48f32ba1ee
 - name: github.com/gobwas/glob
@@ -15,6 +17,8 @@ imports:
   - syntax/lexer
   - util/runes
   - util/strings
+- name: github.com/golang/glog
+  version: 44145f04b68cf362d9c4df2182967c2275eaefed
 - name: github.com/golang/protobuf
   version: df1d3ca07d2d07bba352d5b73c4313b4e2a6203e
   subpackages:
@@ -24,22 +28,68 @@ imports:
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/Masterminds/sprig
-  version: 69011c0cd9b4d2e0733c4d9e2c8e2a5a0d0a2f2f
+  version: 2d2df7bd8bda53b5a55ed04422173cedd50500ea
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/spf13/cobra
   version: f62e98d28ab7ad31d707ba837a966378465c7b57
 - name: github.com/spf13/pflag
   version: 5ccb023bc27df288a957c5e994cd44fd19619465
+- name: golang.org/x/crypto
+  version: 1f22c0103821b9390939b6776727195525381532
+  subpackages:
+  - bcrypt
+  - blowfish
+  - curve25519
+  - pbkdf2
+  - pkcs12
+  - pkcs12/internal/rc2
+  - scrypt
+  - ssh
+  - ssh/terminal
 - name: gopkg.in/yaml.v2
   version: a83829b6f1293c91addabc89d0571c246397bbf4
 - name: k8s.io/helm
-  version: 5cbc48fb305ca4bf68c26eb8d2a7eb363227e973
+  version: db531fd75fb2a1fb0841a98d9e55c58c21f70f4c
   subpackages:
   - cmd/helm/strvals
   - pkg/chartutil
   - pkg/engine
   - pkg/ignore
   - pkg/proto/hapi/chart
+  - pkg/proto/hapi/version
   - pkg/timeconv
+- name: k8s.io/kubernetes
+  version: e9eeec655e7fdee50d4e19200f9707d1cd4a3371
+  subpackages:
+  - pkg/api
+  - pkg/api/errors
+  - pkg/api/meta
+  - pkg/api/unversioned
+  - pkg/api/v1
+  - pkg/apis/apps/v1beta1
+  - pkg/apis/batch
+  - pkg/apis/batch/v1
+  - pkg/apis/extensions
+  - pkg/apis/extensions/v1beta1
+  - pkg/client/clientset_generated/internalclientset
+  - pkg/client/clientset_generated/internalclientset/typed/core/internalversion
+  - pkg/client/clientset_generated/internalclientset/typed/extensions/internalversion
+  - pkg/client/restclient
+  - pkg/client/typed/discovery
+  - pkg/client/unversioned
+  - pkg/client/unversioned/clientcmd
+  - pkg/client/unversioned/portforward
+  - pkg/client/unversioned/remotecommand
+  - pkg/fields
+  - pkg/kubectl
+  - pkg/kubectl/cmd/util
+  - pkg/kubectl/resource
+  - pkg/labels
+  - pkg/runtime
+  - pkg/util/intstr
+  - pkg/util/strategicpatch
+  - pkg/util/wait
+  - pkg/version
+  - pkg/watch
 testImports: []
