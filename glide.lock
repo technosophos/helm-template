@@ -1,5 +1,5 @@
 hash: fb296386508414b5afa66ba325fcd951dabdb14cde8c207a8f84e08d00c9f550
-updated: 2017-02-25T10:24:21.847168-07:00
+updated: 2017-03-07T19:51:00.040731132-07:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
@@ -50,7 +50,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: a83829b6f1293c91addabc89d0571c246397bbf4
 - name: k8s.io/helm
-  version: db531fd75fb2a1fb0841a98d9e55c58c21f70f4c
+  version: 1b330722aafcb8123114ae51f69d1e884a326f3e
   subpackages:
   - cmd/helm/strvals
   - pkg/chartutil
@@ -60,7 +60,7 @@ imports:
   - pkg/proto/hapi/version
   - pkg/timeconv
 - name: k8s.io/kubernetes
-  version: e9eeec655e7fdee50d4e19200f9707d1cd4a3371
+  version: 00a1fb254bd8e5235575fba1398b958943e39078
   subpackages:
   - pkg/api
   - pkg/api/errors

@@ -1,5 +1,7 @@
 HELM_HOME ?= $(shell helm home)
 HAS_GLIDE := $(shell command -v glide;)
+VERSION := $(shell sed -n -e 's/version:[ "]*\([^"]*\).*/\1/p' plugin.yaml)
+DIST := $(CURDIR)/_dist
 
 .PHONY: install
 install: bootstrap build
@@ -13,10 +15,11 @@ build:
 
 .PHONY: dist
 dist:
+	mkdir -p $(DIST)
 	GOOS=linux GOARCH=amd64 go build -o tpl ./main.go
-	tar -zcvf helm-template-linux.tgz tpl README.md LICENSE.txt plugin.yaml
+	tar -zcvf $(DIST)/helm-template-linux-$(VERSION).tgz tpl README.md LICENSE.txt plugin.yaml
 	GOOS=darwin GOARCH=amd64 go build -o tpl ./main.go
-	tar -zcvf helm-template-macos.tgz tpl README.md LICENSE.txt plugin.yaml
+	tar -zcvf $(DIST)/helm-template-macos-$(VERSION).tgz tpl README.md LICENSE.txt plugin.yaml
 
 
 .PHONY: bootstrap
