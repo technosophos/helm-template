@@ -32,6 +32,8 @@ var (
 	valsFiles   valueFiles
 	flagVerbose bool
 	showNotes   bool
+	releaseName string
+	namespace   string
 )
 
 func main() {
@@ -47,6 +49,8 @@ func main() {
 	f.VarP(&valsFiles, "values", "f", "specify one or more YAML files of values")
 	f.BoolVarP(&flagVerbose, "verbose", "v", false, "show the computed YAML values as well.")
 	f.BoolVar(&showNotes, "notes", false, "show the computed NOTES.txt file as well.")
+	f.StringVarP(&releaseName, "release", "r", "RELEASE-NAME", "release name")
+	f.StringVarP(&namespace, "namespace", "n", "NAMESPACE", "namespace")
 
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
@@ -75,9 +79,9 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 
 	options := chartutil.ReleaseOptions{
-		Name:      "RELEASE-NAME",
+		Name:      releaseName,
 		Time:      timeconv.Now(),
-		Namespace: "NAMESPACE",
+		Namespace: namespace,
 		//Revision:  1,
 		//IsInstall: true,
 	}
