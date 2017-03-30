@@ -28,7 +28,7 @@ is done.
 `
 
 var (
-	setVals     string
+	setVals     []string
 	valsFiles   valueFiles
 	flagVerbose bool
 	showNotes   bool
@@ -43,7 +43,7 @@ func main() {
 	}
 
 	f := cmd.Flags()
-	f.StringVar(&setVals, "set", "", "set values on the command line. See 'helm install -h'")
+	f.StringArrayVar(&setVals, "set", []string{}, "set values on the command line. See 'helm install -h'")
 	f.VarP(&valsFiles, "values", "f", "specify one or more YAML files of values")
 	f.BoolVarP(&flagVerbose, "verbose", "v", false, "show the computed YAML values as well.")
 	f.BoolVar(&showNotes, "notes", false, "show the computed NOTES.txt file as well.")
@@ -128,8 +128,11 @@ func vals() ([]byte, error) {
 		base = mergeValues(base, currentMap)
 	}
 
-	if err := strvals.ParseInto(setVals, base); err != nil {
-		return []byte{}, fmt.Errorf("failed parsing --set data: %s", err)
+	// User specified a value via --set
+	for _, value := range setVals {
+		if err := strvals.ParseInto(value, base); err != nil {
+			return []byte{}, fmt.Errorf("failed parsing --set data: %s", err)
+		}
 	}
 
 	return yaml.Marshal(base)
