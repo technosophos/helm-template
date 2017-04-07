@@ -31,17 +31,9 @@ $ helm template [flags] CHART
 
 ## Install
 
-Clone the repository into your `$GOPATH` and then build it.
-
 ```
-$ mkdir -p $GOPATH/src/github.com/technosophos/
-$ cd $GOPATH/src/github.com/technosophos/
-$ git clone https://github.com/technosophos/helm-template.git
-$ cd helm-template
-$ make install
+$ helm plugin install https://github.com/tehnosophos/helm-template
 ```
-
-The above will install this plugin into your `$HELM_HOME/plugins` directory.
 
 ### Prerequisites
 

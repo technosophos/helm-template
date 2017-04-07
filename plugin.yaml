@@ -5,3 +5,5 @@ version: "2.2.2+1"
 usage: "render templates on the local client"
 description: "Render templates on the local client."
 command: "$HELM_PLUGIN_DIR/tpl"
+hooks:
+  install: "cd $HELM_PLUGIN_DIR && make hookInstall"
