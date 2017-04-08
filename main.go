@@ -34,11 +34,12 @@ var (
 	showNotes   bool
 )
 
+var version = "DEV"
+
 func main() {
 	cmd := &cobra.Command{
 		Use:   "template [flags] CHART",
-		Short: "locally render templates",
-		Long:  globalUsage,
+		Short: fmt.Sprintf("locally render templates (helm-template %s)", version),
 		RunE:  run,
 	}
 

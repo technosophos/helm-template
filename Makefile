@@ -3,6 +3,7 @@ HELM_PLUGIN_DIR ?= $(HELM_HOME)/plugins/helm-template
 HAS_GLIDE := $(shell command -v glide;)
 VERSION := $(shell sed -n -e 's/version:[ "]*\([^"]*\).*/\1/p' plugin.yaml)
 DIST := $(CURDIR)/_dist
+LDFLAGS := "-X main.version=${VERSION}"
 
 .PHONY: install
 install: bootstrap build
@@ -14,14 +15,14 @@ hookInstall: bootstrap build
 
 .PHONY: build
 build:
-	go build -o tpl ./main.go
+	go build -o tpl -ldflags $(LDFLAGS) ./main.go
 
 .PHONY: dist
 dist:
 	mkdir -p $(DIST)
-	GOOS=linux GOARCH=amd64 go build -o tpl ./main.go
+	GOOS=linux GOARCH=amd64 go build -o tpl -ldflags $(LDFLAGS) ./main.go
 	tar -zcvf $(DIST)/helm-template-linux-$(VERSION).tgz tpl README.md LICENSE.txt plugin.yaml
-	GOOS=darwin GOARCH=amd64 go build -o tpl ./main.go
+	GOOS=darwin GOARCH=amd64 go build -o tpl -ldflags $(LDFLAGS) ./main.go
 	tar -zcvf $(DIST)/helm-template-macos-$(VERSION).tgz tpl README.md LICENSE.txt plugin.yaml
 
 

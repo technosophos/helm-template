@@ -35,8 +35,27 @@ $ helm template [flags] CHART
 $ helm plugin install https://github.com/tehnosophos/helm-template
 ```
 
-### Prerequisites
+The above will fetch the latest binary release of `helm template` and install it.
+
+### Developer (From Source) Install
+
+If you would like to handle the build yourself, instead of fetching a binary,
+this is how recommend doing it.
+
+First, set up your environment:
 
 - You need to have [Go](http://golang.org) installed. Make sure to set `$GOPATH`
 - If you don't have [Glide](http://glide.sh) installed, this will install it into
   `$GOPATH/bin` for you.
+
+Clone this repo into your `$GOPATH`. You can use `go get -d github.com/technosophos/helm-template`
+for that.
+
+```
+$ cd $GOPATH/src/github.com/technosophos/helm-template
+$ make bootstrap build
+$ SKIP_BIN_INSTALL=1 helm plugin install $GOPATH/src/github.com/technosophos/helm-template
+```
+
+That last command will skip fetching the binary install and use the one you
+built.
