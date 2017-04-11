@@ -32,7 +32,7 @@ $ helm template [flags] CHART
 ## Install
 
 ```
-$ helm plugin install https://github.com/tehnosophos/helm-template
+$ helm plugin install https://github.com/technosophos/helm-template
 ```
 
 The above will fetch the latest binary release of `helm template` and install it.
