@@ -25,6 +25,10 @@ This does not require Tiller. However, any values that would normally be
 looked up or retrieved in-cluster will be faked locally. Additionally, none
 of the server-side testing of chart validity (e.g. whether an API is supported)
 is done.
+
+To render just one template in a chart, use '-x':
+
+	$ helm template mychart -x mychart/templates/deployment.yaml
 `
 
 var (
@@ -32,6 +36,7 @@ var (
 	valsFiles   valueFiles
 	flagVerbose bool
 	showNotes   bool
+	renderFiles []string
 )
 
 var version = "DEV"
@@ -48,6 +53,7 @@ func main() {
 	f.VarP(&valsFiles, "values", "f", "specify one or more YAML files of values")
 	f.BoolVarP(&flagVerbose, "verbose", "v", false, "show the computed YAML values as well.")
 	f.BoolVar(&showNotes, "notes", false, "show the computed NOTES.txt file as well.")
+	f.StringArrayVarP(&renderFiles, "execute", "x", []string{}, "only execute the given templates.")
 
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
@@ -94,6 +100,27 @@ func run(cmd *cobra.Command, args []string) error {
 	out, err := renderer.Render(c, vals)
 	if err != nil {
 		return err
+	}
+
+	in := func(needle string, haystack []string) bool {
+		for _, h := range haystack {
+			fmt.Printf("compare %q to %q\n", needle, h)
+			if h == needle {
+				return true
+			}
+		}
+		return false
+	}
+
+	// If renderFiles is set, we ONLY print those.
+	if len(renderFiles) > 0 {
+		for name, data := range out {
+			if in(name, renderFiles) {
+				fmt.Printf("---\n# Source: %s\n", name)
+				fmt.Println(data)
+			}
+		}
+		return nil
 	}
 
 	for name, data := range out {

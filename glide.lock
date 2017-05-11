@@ -1,10 +1,10 @@
-hash: 92d2116811b377916ba6ad391afa208ca1b586c92bd910396d8c48b8e36038ba
-updated: 2017-04-07T17:06:32.714968507-06:00
+hash: c5fba62af39583f29093782996bef52fb8083d3ee5dabbfd3d3bf34b006543a3
+updated: 2017-05-11T14:03:47.27959371-06:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
-- name: github.com/blang/semver
-  version: 31b736133b98f26d5e078ec9eb591666edfd091f
+- name: github.com/BurntSushi/toml
+  version: b26d9c308763d68093482582cea63d69be07a0f0
 - name: github.com/facebookgo/symwalk
   version: 42004b9f322246749dd73ad71008b1f3160c0052
 - name: github.com/ghodss/yaml
@@ -19,48 +19,39 @@ imports:
   - syntax/lexer
   - util/runes
   - util/strings
-- name: github.com/golang/glog
-  version: 44145f04b68cf362d9c4df2182967c2275eaefed
 - name: github.com/golang/protobuf
-  version: df1d3ca07d2d07bba352d5b73c4313b4e2a6203e
+  version: 2bba0603135d7d7f5cb73b2125beeda19c09f4ef
   subpackages:
   - proto
   - ptypes/any
   - ptypes/timestamp
+- name: github.com/imdario/mergo
+  version: 6633656539c1639d9d78127b7d47c622b5d7b6dc
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/Masterminds/semver
   version: 3f0ab6d4ab4bed1c61caf056b63a6e62190c7801
 - name: github.com/Masterminds/sprig
-  version: 23597e5f6ad0e4d590e71314bfd0251a4a3cf849
-- name: github.com/naoina/go-stringutil
-  version: 6b638e95a32d0c1131db0e7fe83775cbea4a0d0b
-- name: github.com/naoina/toml
-  version: 751171607256bb66e64c9f0220c00662420c38e9
-  subpackages:
-  - ast
+  version: a48f46e0125cf60347eda24fccf1b09f1a0d681f
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/spf13/cobra
   version: f62e98d28ab7ad31d707ba837a966378465c7b57
 - name: github.com/spf13/pflag
-  version: 5ccb023bc27df288a957c5e994cd44fd19619465
+  version: 9ff6c6923cfffbcd502984b8e0c80539a94968b7
 - name: golang.org/x/crypto
-  version: 1f22c0103821b9390939b6776727195525381532
+  version: d172538b2cfce0c13cee31e647d0367aa8cd2486
   subpackages:
-  - bcrypt
-  - blowfish
-  - curve25519
   - pbkdf2
-  - pkcs12
-  - pkcs12/internal/rc2
   - scrypt
-  - ssh
-  - ssh/terminal
 - name: gopkg.in/yaml.v2
-  version: a83829b6f1293c91addabc89d0571c246397bbf4
+  version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
+- name: k8s.io/apimachinery
+  version: fbd6803372f831e58b86c78d07421637a64ad768
+  subpackages:
+  - pkg/version
 - name: k8s.io/helm
-  version: d83c245fc324117885ed83afc90ac74afed271b4
+  version: 46d9ea82e2c925186e1fc620a8320ce1314cbb02
   subpackages:
   - pkg/chartutil
   - pkg/engine
@@ -69,37 +60,4 @@ imports:
   - pkg/proto/hapi/version
   - pkg/strvals
   - pkg/timeconv
-- name: k8s.io/kubernetes
-  version: 114f8911f9597be669a747ab72787e0bd74c9359
-  subpackages:
-  - pkg/api
-  - pkg/api/errors
-  - pkg/api/meta
-  - pkg/api/unversioned
-  - pkg/api/v1
-  - pkg/apis/apps/v1beta1
-  - pkg/apis/batch
-  - pkg/apis/batch/v1
-  - pkg/apis/extensions
-  - pkg/apis/extensions/v1beta1
-  - pkg/client/clientset_generated/internalclientset
-  - pkg/client/clientset_generated/internalclientset/typed/core/internalversion
-  - pkg/client/clientset_generated/internalclientset/typed/extensions/internalversion
-  - pkg/client/restclient
-  - pkg/client/typed/discovery
-  - pkg/client/unversioned
-  - pkg/client/unversioned/clientcmd
-  - pkg/client/unversioned/portforward
-  - pkg/client/unversioned/remotecommand
-  - pkg/fields
-  - pkg/kubectl
-  - pkg/kubectl/cmd/util
-  - pkg/kubectl/resource
-  - pkg/labels
-  - pkg/runtime
-  - pkg/util/intstr
-  - pkg/util/strategicpatch
-  - pkg/util/wait
-  - pkg/version
-  - pkg/watch
 testImports: []
