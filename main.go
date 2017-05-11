@@ -108,7 +108,6 @@ func run(cmd *cobra.Command, args []string) error {
 
 	in := func(needle string, haystack []string) bool {
 		for _, h := range haystack {
-			fmt.Printf("compare %q to %q\n", needle, h)
 			if h == needle {
 				return true
 			}
