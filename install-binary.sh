@@ -7,6 +7,14 @@ PROJECT_GH="technosophos/$PROJECT_NAME"
 
 : ${HELM_PLUGIN_PATH:="$(helm home)/plugins/helm-template"}
 
+# Convert the HELM_PLUGIN_PATH to unix if cygpath is
+# available. This is the case when using MSYS2 or Cygwin
+# on Windows where helm returns a Windows path but we
+# need a Unix path
+if type cygpath > /dev/nul; then
+  HELM_PLUGIN_PATH=$(cygpath -u $HELM_PLUGIN_PATH)
+fi
+
 if [[ $SKIP_BIN_INSTALL == "1" ]]; then
   echo "Skipping binary install"
   exit
@@ -32,6 +40,8 @@ initOS() {
   OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
 
   case "$OS" in
+    # Msys support
+    msys*) OS='windows';;
     # Minimalist GNU for Windows
     mingw*) OS='windows';;
     darwin) OS='macos';;
@@ -41,7 +51,7 @@ initOS() {
 # verifySupported checks that the os/arch combination is supported for
 # binary builds.
 verifySupported() {
-  local supported="linux-amd64\nmacos-amd64"
+  local supported="linux-amd64\nmacos-amd64\nwindows-amd64"
   if ! echo "${supported}" | grep -q "${OS}-${ARCH}"; then
     echo "No prebuild binary for ${OS}-${ARCH}."
     exit 1
@@ -84,7 +94,8 @@ installFile() {
   tar xf "$PLUGIN_TMP_FILE" -C "$HELM_TMP"
   HELM_TMP_BIN="$HELM_TMP/tpl"
   echo "Preparing to install into ${HELM_PLUGIN_PATH}"
-  cp "$HELM_TMP_BIN" "$HELM_PLUGIN_PATH"
+  # Use * to also copy the file withe the exe suffix on Windows
+  cp "$HELM_TMP_BIN"* "$HELM_PLUGIN_PATH"
 }
 
 # fail_trap is executed if an error occurs.
@@ -101,7 +112,10 @@ fail_trap() {
 testVersion() {
   set +e
   echo "$PROJECT_NAME installed into $HELM_PLUGIN_PATH/$PROJECT_NAME"
-  $HELM_PLUGIN_PATH/tpl -h
+  # To avoid to keep track of the Windows suffix,
+  # call the plugin assuming it is in the PATH
+  PATH=$PATH:$HELM_PLUGIN_PATH
+  tpl -h
   set -e
 }
 
