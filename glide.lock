@@ -1,8 +1,8 @@
-hash: c5fba62af39583f29093782996bef52fb8083d3ee5dabbfd3d3bf34b006543a3
-updated: 2017-05-11T14:03:47.27959371-06:00
+hash: 0b1e82c6e57deeeb877eee55cd3def35a5d95a89b410873960e53483b49b8922
+updated: 2017-06-23T16:45:31.12924553-07:00
 imports:
 - name: github.com/aokoli/goutils
-  version: 9c37978a95bd5c709a15883b6242714ea6709e64
+  version: 3391d3790d23d03408670993e957e8f408993c34
 - name: github.com/BurntSushi/toml
   version: b26d9c308763d68093482582cea63d69be07a0f0
 - name: github.com/facebookgo/symwalk
@@ -25,6 +25,8 @@ imports:
   - proto
   - ptypes/any
   - ptypes/timestamp
+- name: github.com/huandu/xstrings
+  version: 3959339b333561bf62a38b424fd41517c2c90f40
 - name: github.com/imdario/mergo
   version: 6633656539c1639d9d78127b7d47c622b5d7b6dc
 - name: github.com/inconshreveable/mousetrap
@@ -32,26 +34,26 @@ imports:
 - name: github.com/Masterminds/semver
   version: 3f0ab6d4ab4bed1c61caf056b63a6e62190c7801
 - name: github.com/Masterminds/sprig
-  version: a48f46e0125cf60347eda24fccf1b09f1a0d681f
+  version: 9526be0327b26ad31aa70296a7b10704883976d5
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/spf13/cobra
-  version: f62e98d28ab7ad31d707ba837a966378465c7b57
+  version: d638dcb7c7c1c9b62f3a6297a17834980d245dc7
 - name: github.com/spf13/pflag
-  version: 9ff6c6923cfffbcd502984b8e0c80539a94968b7
+  version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: golang.org/x/crypto
-  version: d172538b2cfce0c13cee31e647d0367aa8cd2486
+  version: adbae1b6b6fb4b02448a0fc0dbbc9ba2b95b294d
   subpackages:
   - pbkdf2
   - scrypt
 - name: gopkg.in/yaml.v2
-  version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
+  version: cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b
 - name: k8s.io/apimachinery
-  version: fbd6803372f831e58b86c78d07421637a64ad768
+  version: abe34e4f5b4413c282a83011892cbeea5b32223b
   subpackages:
   - pkg/version
 - name: k8s.io/helm
-  version: 46d9ea82e2c925186e1fc620a8320ce1314cbb02
+  version: 012cb0ac1a1b2f888144ef5a67b8dab6c2d45be6
   subpackages:
   - pkg/chartutil
   - pkg/engine

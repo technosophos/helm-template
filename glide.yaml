@@ -2,7 +2,7 @@ package: github.com/technosophos/helm-template
 import:
 - package: github.com/spf13/cobra
 - package: k8s.io/helm
-  version: ^2.4.1
+  version: ^2.5.0
   subpackages:
   - pkg/chartutil
   - pkg/engine
