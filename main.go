@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/ghodss/yaml"
@@ -115,9 +116,16 @@ func run(cmd *cobra.Command, args []string) error {
 		return false
 	}
 
+	sortedKeys := make([]string, 0, len(out))
+	for key := range out {
+		sortedKeys = append(sortedKeys, key)
+	}
+	sort.Strings(sortedKeys)
+
 	// If renderFiles is set, we ONLY print those.
 	if len(renderFiles) > 0 {
-		for name, data := range out {
+		for _, name := range sortedKeys {
+			data := out[name]
 			if in(name, renderFiles) {
 				fmt.Printf("---\n# Source: %s\n", name)
 				fmt.Println(data)
@@ -126,7 +134,8 @@ func run(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	for name, data := range out {
+	for _, name := range sortedKeys {
+		data := out[name]
 		b := filepath.Base(name)
 		if !showNotes && b == "NOTES.txt" {
 			continue
