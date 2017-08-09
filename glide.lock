@@ -1,10 +1,12 @@
-hash: 0b1e82c6e57deeeb877eee55cd3def35a5d95a89b410873960e53483b49b8922
-updated: 2017-07-31T09:30:02.493522293-06:00
+hash: eb8e8a9c8106e7432f73783e54f57fbf0ecb6e745610027d5553e4d7f81f72bf
+updated: 2017-08-09T09:41:33.326568906-05:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
 - name: github.com/BurntSushi/toml
   version: b26d9c308763d68093482582cea63d69be07a0f0
+- name: github.com/facebookgo/atomicfile
+  version: 2de1f203e7d5e386a6833233882782932729f27e
 - name: github.com/facebookgo/symwalk
   version: 42004b9f322246749dd73ad71008b1f3160c0052
 - name: github.com/ghodss/yaml
@@ -42,24 +44,44 @@ imports:
 - name: github.com/spf13/pflag
   version: 5ccb023bc27df288a957c5e994cd44fd19619465
 - name: golang.org/x/crypto
-  version: 1f22c0103821b9390939b6776727195525381532
+  version: d172538b2cfce0c13cee31e647d0367aa8cd2486
   subpackages:
+  - cast5
+  - openpgp
+  - openpgp/armor
+  - openpgp/clearsign
+  - openpgp/elgamal
+  - openpgp/errors
+  - openpgp/packet
+  - openpgp/s2k
   - pbkdf2
   - scrypt
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/apimachinery
-  version: fbd6803372f831e58b86c78d07421637a64ad768
+  version: abe34e4f5b4413c282a83011892cbeea5b32223b
   subpackages:
   - pkg/version
 - name: k8s.io/helm
   version: 7cf31e8d9a026287041bae077b09165be247ae66
   subpackages:
+  - cmd/helm
+  - pkg/apis/settings
   - pkg/chartutil
+  - pkg/downloader
   - pkg/engine
+  - pkg/getter
+  - pkg/helm/environment
+  - pkg/helm/helmpath
   - pkg/ignore
+  - pkg/plugin
   - pkg/proto/hapi/chart
   - pkg/proto/hapi/version
+  - pkg/provenance
+  - pkg/repo
+  - pkg/resolver
   - pkg/strvals
   - pkg/timeconv
+  - pkg/tlsutil
+  - pkg/urlutil
 testImports: []
