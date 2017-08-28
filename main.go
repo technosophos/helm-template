@@ -9,9 +9,11 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Masterminds/semver"
 	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
 
+	kversion "k8s.io/apimachinery/pkg/version"
 	"k8s.io/helm/pkg/chartutil"
 	"k8s.io/helm/pkg/engine"
 	"k8s.io/helm/pkg/proto/hapi/chart"
@@ -40,6 +42,7 @@ var (
 	releaseName string
 	namespace   string
 	renderFiles []string
+	kubeVersion string
 )
 
 var version = "DEV"
@@ -59,6 +62,7 @@ func main() {
 	f.StringVarP(&releaseName, "release", "r", "RELEASE-NAME", "release name")
 	f.StringVarP(&namespace, "namespace", "n", "NAMESPACE", "namespace")
 	f.StringArrayVarP(&renderFiles, "execute", "x", []string{}, "only execute the given templates.")
+	f.StringVar(&kubeVersion, "kube-version", "", "the Kubernetes version used as Capabilities.KubeVersion.Major/Minor (e.g. v1.7)")
 
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
@@ -97,7 +101,20 @@ func run(cmd *cobra.Command, args []string) error {
 	// Set up engine.
 	renderer := engine.New()
 
-	vals, err := chartutil.ToRenderValues(c, config, options)
+	caps := &chartutil.Capabilities{APIVersions: chartutil.DefaultVersionSet}
+	// If --kube-version is set, we try to parse it as SemVer, and use as
+	// Capabilities.KubeVersion.Major/Minor.
+	if kubeVersion != "" {
+		kv, err := semver.NewVersion(kubeVersion)
+		if err != nil {
+			return err
+		}
+		caps.KubeVersion = &kversion.Info{
+			Major: fmt.Sprint(kv.Major()),
+			Minor: fmt.Sprint(kv.Minor()),
+		}
+	}
+	vals, err := chartutil.ToRenderValuesCaps(c, config, options, caps)
 	if err != nil {
 		return err
 	}
