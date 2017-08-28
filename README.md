@@ -22,10 +22,15 @@ $ helm template [flags] CHART
 ### Flags:
 
 ```
-      --notes               show the computed NOTES.txt file as well.
-      --set string          set values on the command line. See 'helm install -h'
-  -f, --values valueFiles   specify one or more YAML files of values (default [])
-  -v, --verbose             show the computed YAML values as well.
+  -x, --execute stringArray   only execute the given templates.
+  -h, --help                  help for template
+      --kube-version string   the Kubernetes version used as Capabilities.KubeVersion.Major/Minor (e.g. v1.7)
+  -n, --namespace string      namespace (default "NAMESPACE")
+      --notes                 show the computed NOTES.txt file as well.
+  -r, --release string        release name (default "RELEASE-NAME")
+      --set stringArray       set values on the command line. See 'helm install -h'
+  -f, --values valueFiles     specify one or more YAML files of values (default [])
+  -v, --verbose               show the computed YAML values as well.
 ```
 
 
