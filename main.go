@@ -81,6 +81,10 @@ func run(cmd *cobra.Command, args []string) error {
 
 	config := &chart.Config{Raw: string(vv), Values: map[string]*chart.Value{}}
 
+	if err = chartutil.ProcessRequirementsEnabled(c, config); err != nil {
+		return err
+	}
+
 	if flagVerbose {
 		fmt.Println("---\n# merged values")
 		fmt.Println(string(vv))
