@@ -24,7 +24,8 @@ dist:
 	tar -zcvf $(DIST)/helm-template-linux-$(VERSION).tgz tpl README.md LICENSE.txt plugin.yaml
 	GOOS=darwin GOARCH=amd64 go build -o tpl -ldflags $(LDFLAGS) ./main.go
 	tar -zcvf $(DIST)/helm-template-macos-$(VERSION).tgz tpl README.md LICENSE.txt plugin.yaml
-
+	GOOS=windows GOARCH=amd64 go build -o tpl.exe -ldflags $(LDFLAGS) ./main.go
+	tar -zcvf $(DIST)/helm-template-windows-$(VERSION).tgz tpl.exe README.md LICENSE.txt plugin.yaml
 
 .PHONY: bootstrap
 bootstrap:

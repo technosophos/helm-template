@@ -6,17 +6,19 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
+
+	"path"
 
 	"k8s.io/helm/pkg/chartutil"
 	"k8s.io/helm/pkg/engine"
 	"k8s.io/helm/pkg/proto/hapi/chart"
 	"k8s.io/helm/pkg/strvals"
 	"k8s.io/helm/pkg/timeconv"
-	"path"
 )
 
 const globalUsage = `
@@ -26,14 +28,21 @@ This does not require Tiller. However, any values that would normally be
 looked up or retrieved in-cluster will be faked locally. Additionally, none
 of the server-side testing of chart validity (e.g. whether an API is supported)
 is done.
+
+To render just one template in a chart, use '-x':
+
+	$ helm template mychart -x mychart/templates/deployment.yaml
 `
 
 var (
-	setVals     string
+	setVals     []string
 	valsFiles   valueFiles
 	flagVerbose bool
 	showNotes   bool
 	outputDir   string
+	releaseName string
+	namespace   string
+	renderFiles []string
 )
 
 var version = "DEV"
@@ -46,11 +55,15 @@ func main() {
 	}
 
 	f := cmd.Flags()
-	f.StringVar(&setVals, "set", "", "set values on the command line. See 'helm install -h'")
+	f.StringArrayVar(&setVals, "set", []string{}, "set values on the command line. See 'helm install -h'")
 	f.VarP(&valsFiles, "values", "f", "specify one or more YAML files of values")
 	f.BoolVarP(&flagVerbose, "verbose", "v", false, "show the computed YAML values as well.")
 	f.BoolVar(&showNotes, "notes", false, "show the computed NOTES.txt file as well.")
-	f.StringVarP(&outputDir, "output", "o", "/tmp","output dir")
+	f.StringVarP(&outputDir, "output", "o", "/tmp", "output dir")
+	f.StringVarP(&releaseName, "release", "r", "RELEASE-NAME", "release name")
+	f.StringVarP(&namespace, "namespace", "n", "NAMESPACE", "namespace")
+	f.StringArrayVarP(&renderFiles, "execute", "x", []string{}, "only execute the given templates.")
+
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
 	}
@@ -78,9 +91,9 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 
 	options := chartutil.ReleaseOptions{
-		Name:      "RELEASE-NAME",
+		Name:      releaseName,
 		Time:      timeconv.Now(),
-		Namespace: "NAMESPACE",
+		Namespace: namespace,
 		//Revision:  1,
 		//IsInstall: true,
 	}
@@ -98,7 +111,35 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	for name, data := range out {
+	in := func(needle string, haystack []string) bool {
+		for _, h := range haystack {
+			if h == needle {
+				return true
+			}
+		}
+		return false
+	}
+
+	sortedKeys := make([]string, 0, len(out))
+	for key := range out {
+		sortedKeys = append(sortedKeys, key)
+	}
+	sort.Strings(sortedKeys)
+
+	// If renderFiles is set, we ONLY print those.
+	if len(renderFiles) > 0 {
+		for _, name := range sortedKeys {
+			data := out[name]
+			if in(name, renderFiles) {
+				fmt.Printf("---\n# Source: %s\n", name)
+				fmt.Println(data)
+			}
+		}
+		return nil
+	}
+
+	for _, name := range sortedKeys {
+		data := out[name]
 		b := filepath.Base(name)
 		if !showNotes && b == "NOTES.txt" {
 			continue
@@ -107,7 +148,7 @@ func run(cmd *cobra.Command, args []string) error {
 			continue
 		}
 		if len(outputDir) > 0 {
-			outFilePath :=  filepath.Join(outputDir,  name)
+			outFilePath := filepath.Join(outputDir, name)
 			if _, err := os.Stat(path.Dir(outFilePath)); os.IsNotExist(err) {
 				os.MkdirAll(path.Dir(outFilePath), 0777)
 			}
@@ -142,8 +183,11 @@ func vals() ([]byte, error) {
 		base = mergeValues(base, currentMap)
 	}
 
-	if err := strvals.ParseInto(setVals, base); err != nil {
-		return []byte{}, fmt.Errorf("failed parsing --set data: %s", err)
+	// User specified a value via --set
+	for _, value := range setVals {
+		if err := strvals.ParseInto(value, base); err != nil {
+			return []byte{}, fmt.Errorf("failed parsing --set data: %s", err)
+		}
 	}
 
 	return yaml.Marshal(base)

@@ -1,7 +1,7 @@
 name: "template"
 # Version is the version of Helm plus the number of official builds for this
 # plugin
-version: "2.3.0+1"
+version: "2.5.1+2"
 usage: "render templates on the local client"
 description: "Render templates on the local client."
 command: "$HELM_PLUGIN_DIR/tpl"
