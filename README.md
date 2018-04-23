@@ -1,3 +1,9 @@
+**If you are using a recent version of Helm, you do not need this anymore!**
+
+`helm template` is now a built-in part of Helm. Just run `helm template --help` with your existing Helm.
+
+----
+
 # Helm Template Plugin
 
 This is a Helm plugin to help chart developers debug their charts. It works like
