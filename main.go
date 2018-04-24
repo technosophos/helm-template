@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -40,7 +41,10 @@ var (
 	releaseName string
 	namespace   string
 	renderFiles []string
+	outputDir   string
 )
+
+const defaultDirectoryPermission = 0755
 
 var version = "DEV"
 
@@ -59,6 +63,7 @@ func main() {
 	f.StringVarP(&releaseName, "release", "r", "RELEASE-NAME", "release name")
 	f.StringVarP(&namespace, "namespace", "n", "NAMESPACE", "namespace")
 	f.StringArrayVarP(&renderFiles, "execute", "x", []string{}, "only execute the given templates.")
+	f.StringVarP(&outputDir, "output-dir", "o", "", "store the output files in this directory.")
 
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
@@ -77,6 +82,13 @@ func run(cmd *cobra.Command, args []string) error {
 	vv, err := vals()
 	if err != nil {
 		return err
+	}
+
+	if outputDir != "" {
+		_, err = os.Stat(outputDir)
+		if os.IsNotExist(err) {
+			panic(fmt.Sprintf("output-dir '%s' does not exist", outputDir))
+		}
 	}
 
 	config := &chart.Config{Raw: string(vv), Values: map[string]*chart.Value{}}
@@ -127,8 +139,7 @@ func run(cmd *cobra.Command, args []string) error {
 		for _, name := range sortedKeys {
 			data := out[name]
 			if in(name, renderFiles) {
-				fmt.Printf("---\n# Source: %s\n", name)
-				fmt.Println(data)
+				printOutput(name, data)
 			}
 		}
 		return nil
@@ -143,8 +154,7 @@ func run(cmd *cobra.Command, args []string) error {
 		if strings.HasPrefix(b, "_") {
 			continue
 		}
-		fmt.Printf("---\n# Source: %s\n", name)
-		fmt.Println(data)
+		printOutput(name, data)
 	}
 	return nil
 }
@@ -226,4 +236,52 @@ func (v *valueFiles) Set(value string) error {
 		*v = append(*v, filePath)
 	}
 	return nil
+}
+
+func printOutput(name string, data string) {
+	if outputDir != "" {
+		printToFile(name, data)
+		return
+	}
+
+	printToStdout(name, data)
+}
+
+func printToStdout(name string, data string) {
+	fmt.Printf("---\n# Source: %s\n", name)
+	fmt.Printf(data)
+}
+
+func printToFile(name string, data string) {
+	outfileName := strings.Join([]string{outputDir, name}, string(filepath.Separator))
+	ensureDirectoryForFile(outfileName)
+
+	f, err := os.Create(outfileName)
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	_, err = f.WriteString(fmt.Sprintf("---\n# Source: %s\n%s", name, data))
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("wrote %s\n", outfileName)
+	return
+}
+
+func ensureDirectoryForFile(file string) {
+	baseDir := path.Dir(file)
+	_, err := os.Stat(baseDir)
+	if !os.IsNotExist(err) {
+		return
+	}
+
+	err = os.MkdirAll(baseDir, defaultDirectoryPermission)
+	if err != nil {
+		panic(err)
+	}
 }
