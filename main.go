@@ -12,9 +12,13 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
 
+	helm_env "k8s.io/helm/pkg/helm/environment"
 	"k8s.io/helm/pkg/chartutil"
+	"k8s.io/helm/pkg/downloader"
 	"k8s.io/helm/pkg/engine"
+	"k8s.io/helm/pkg/getter"
 	"k8s.io/helm/pkg/proto/hapi/chart"
+	"k8s.io/helm/pkg/repo"
 	"k8s.io/helm/pkg/strvals"
 	"k8s.io/helm/pkg/timeconv"
 )
@@ -33,21 +37,24 @@ To render just one template in a chart, use '-x':
 `
 
 var (
-	setVals     []string
-	valsFiles   valueFiles
+	setVals		[]string
+	valsFiles	valueFiles
 	flagVerbose bool
-	showNotes   bool
+	showNotes	bool
 	releaseName string
-	namespace   string
+	namespace	string
 	renderFiles []string
+	settings	helm_env.EnvSettings
+	version		string
 )
 
-var version = "DEV"
+var DefaultHelmHome = filepath.Join("$HOME", ".helm")
+var helmTemplateVersion = "DEV"
 
 func main() {
 	cmd := &cobra.Command{
 		Use:   "template [flags] CHART",
-		Short: fmt.Sprintf("locally render templates (helm-template %s)", version),
+		Short: fmt.Sprintf("locally render templates (helm-template %s)", helmTemplateVersion),
 		RunE:  run,
 	}
 
@@ -59,6 +66,8 @@ func main() {
 	f.StringVarP(&releaseName, "release", "r", "RELEASE-NAME", "release name")
 	f.StringVarP(&namespace, "namespace", "n", "NAMESPACE", "namespace")
 	f.StringArrayVarP(&renderFiles, "execute", "x", []string{}, "only execute the given templates.")
+	f.StringVar((*string)(&settings.Home), "home", DefaultHelmHome, "location of your Helm config. Overrides $HELM_HOME")
+	f.StringVar(&version, "version", "", "specify the exact chart version to install. If this is not specified, the latest version is installed")
 
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
@@ -69,7 +78,12 @@ func run(cmd *cobra.Command, args []string) error {
 	if len(args) < 1 {
 		return errors.New("chart is required")
 	}
-	c, err := chartutil.Load(args[0])
+	cp, err := locateChartPath("", args[0], version, false, "", "", "", "")
+	if err != nil {
+		return err
+	}
+	c, err := chartutil.Load(cp)
+	//c, err := chartutil.Load(args[0])
 	if err != nil {
 		return err
 	}
@@ -87,8 +101,8 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 
 	options := chartutil.ReleaseOptions{
-		Name:      releaseName,
-		Time:      timeconv.Now(),
+		Name:	   releaseName,
+		Time:	   timeconv.Now(),
 		Namespace: namespace,
 		//Revision:  1,
 		//IsInstall: true,
@@ -226,4 +240,78 @@ func (v *valueFiles) Set(value string) error {
 		*v = append(*v, filePath)
 	}
 	return nil
+}
+
+// Copied from Helm.
+func locateChartPath(repoURL, name, version string, verify bool, keyring,
+	certFile, keyFile, caFile string) (string, error) {
+	name = strings.TrimSpace(name)
+	version = strings.TrimSpace(version)
+	if fi, err := os.Stat(name); err == nil {
+		abs, err := filepath.Abs(name)
+		if err != nil {
+			return abs, err
+		}
+		if verify {
+			if fi.IsDir() {
+				return "", errors.New("cannot verify a directory")
+			}
+			if _, err := downloader.VerifyChart(abs, keyring); err != nil {
+				return "", err
+			}
+		}
+		return abs, nil
+	}
+	if filepath.IsAbs(name) || strings.HasPrefix(name, ".") {
+		return name, fmt.Errorf("path %q not found", name)
+	}
+
+	crepo := filepath.Join(settings.Home.Repository(), name)
+	if _, err := os.Stat(crepo); err == nil {
+		return filepath.Abs(crepo)
+	}
+
+	dl := downloader.ChartDownloader{
+		HelmHome: settings.Home,
+		Out:	  os.Stdout,
+		Keyring:  keyring,
+		Getters:  getter.All(settings),
+	}
+	if verify {
+		dl.Verify = downloader.VerifyAlways
+	}
+	if repoURL != "" {
+		chartURL, err := repo.FindChartInRepoURL(repoURL, name, version,
+			certFile, keyFile, caFile, getter.All(settings))
+		if err != nil {
+			return "", err
+		}
+		name = chartURL
+	}
+
+	if _, err := os.Stat(settings.Home.Archive()); os.IsNotExist(err) {
+		os.MkdirAll(settings.Home.Archive(), 0744)
+	}
+
+	filename, _, err := dl.DownloadTo(name, version, settings.Home.Archive())
+	if err == nil {
+		lname, err := filepath.Abs(filename)
+		if err != nil {
+			return filename, err
+		}
+		debug("Fetched %s to %s\n", name, filename)
+		return lname, nil
+	} else if settings.Debug {
+		return filename, err
+	}
+
+	return filename, fmt.Errorf("file %q not found", name)
+}
+
+// Copied from Helm.
+func debug(format string, args ...interface{}) {
+	if settings.Debug {
+		format = fmt.Sprintf("[debug] %s\n", format)
+		fmt.Printf(format, args...)
+	}
 }
