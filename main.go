@@ -12,6 +12,8 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
 
+	"path"
+
 	"k8s.io/helm/pkg/chartutil"
 	"k8s.io/helm/pkg/engine"
 	"k8s.io/helm/pkg/proto/hapi/chart"
@@ -37,6 +39,7 @@ var (
 	valsFiles   valueFiles
 	flagVerbose bool
 	showNotes   bool
+	outputDir   string
 	releaseName string
 	namespace   string
 	renderFiles []string
@@ -56,6 +59,7 @@ func main() {
 	f.VarP(&valsFiles, "values", "f", "specify one or more YAML files of values")
 	f.BoolVarP(&flagVerbose, "verbose", "v", false, "show the computed YAML values as well.")
 	f.BoolVar(&showNotes, "notes", false, "show the computed NOTES.txt file as well.")
+	f.StringVarP(&outputDir, "output", "o", "/tmp", "output dir")
 	f.StringVarP(&releaseName, "release", "r", "RELEASE-NAME", "release name")
 	f.StringVarP(&namespace, "namespace", "n", "NAMESPACE", "namespace")
 	f.StringArrayVarP(&renderFiles, "execute", "x", []string{}, "only execute the given templates.")
@@ -143,8 +147,19 @@ func run(cmd *cobra.Command, args []string) error {
 		if strings.HasPrefix(b, "_") {
 			continue
 		}
-		fmt.Printf("---\n# Source: %s\n", name)
-		fmt.Println(data)
+		if len(outputDir) > 0 {
+			outFilePath := filepath.Join(outputDir, name)
+			if _, err := os.Stat(path.Dir(outFilePath)); os.IsNotExist(err) {
+				os.MkdirAll(path.Dir(outFilePath), 0777)
+			}
+			err := ioutil.WriteFile(outFilePath, []byte(data), 0644)
+			if err != nil {
+				panic(err)
+			}
+		} else {
+			fmt.Printf("---\n# Source: %s\n", name)
+			fmt.Println(data)
+		}
 	}
 	return nil
 }
